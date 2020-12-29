@@ -26,16 +26,13 @@ namespace API.Controllers
             return _context.Products.Any(e => e.Id == id);
         }
 
-        // GET: api/Products
         [HttpGet("products/")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
-        //  GET: api/Products/2
         [HttpGet("product/{id}")]
-        // [Route("v1/product")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -48,9 +45,7 @@ namespace API.Controllers
             return product;
         }
 
-        //  PUT: v1/products/1
         [HttpPut("product/{id}")]
-        // [Route("v1/product")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
             if (id != product.Id)
@@ -79,10 +74,8 @@ namespace API.Controllers
             return NoContent();
         }
 
-        // POST: v1/product
-        [HttpPost("product/{id}")]
-        // [Route("v1/product")]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        [HttpPost("product")]
+        public async Task<ActionResult<Product>> PostProduct([FromForm] Product product)
         {
 
             _context.Products.Add(product);
@@ -91,9 +84,7 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
-        // DELETE: v1/products/1
         [HttpDelete("product/{id}")]
-        // [Route("v1/product")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
