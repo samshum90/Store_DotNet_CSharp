@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using API.Data;
 using API.Models;
@@ -8,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("v1/[controller]")]
+    [Route("v1/")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -25,14 +27,15 @@ namespace API.Controllers
         }
 
         // GET: api/Products
-        [HttpGet]
+        [HttpGet("products/")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
         //  GET: api/Products/2
-        [HttpGet("{id}")]
+        [HttpGet("product/{id}")]
+        // [Route("v1/product")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -46,7 +49,8 @@ namespace API.Controllers
         }
 
         //  PUT: v1/products/1
-        [HttpPut("{id}")]
+        [HttpPut("product/{id}")]
+        // [Route("v1/product")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
             if (id != product.Id)
@@ -75,10 +79,12 @@ namespace API.Controllers
             return NoContent();
         }
 
-        // POST: api/products
-        [HttpPost]
+        // POST: v1/product
+        [HttpPost("product/{id}")]
+        // [Route("v1/product")]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
@@ -86,7 +92,8 @@ namespace API.Controllers
         }
 
         // DELETE: v1/products/1
-        [HttpDelete("{id}")]
+        [HttpDelete("product/{id}")]
+        // [Route("v1/product")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
