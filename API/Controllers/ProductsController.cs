@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +17,11 @@ namespace API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public ProductsController(DataContext context)
+        public ProductsController(DataContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
         }
 
@@ -25,6 +29,8 @@ namespace API.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
+
+        
 
         [HttpGet("products/")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
@@ -46,42 +52,31 @@ namespace API.Controllers
         }
 
         [HttpPut("product/{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<ActionResult> UpdateProduct( int id, [FromForm] ProductDto productDto)
         {
-            if (id != product.Id)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
-                return BadRequest();
+                return  NotFound();
             }
 
+            _mapper.Map(productDto, product);
             _context.Entry(product).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+            return Ok(product);
+            
         }
 
         [HttpPost("product")]
-        public async Task<ActionResult<Product>> PostProduct([FromForm] Product product)
+        public async Task<ActionResult<Product>> CreateProduct([FromForm] Product product)
         {
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            return Ok(product);
+            // return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
         }
 
         [HttpDelete("product/{id}")]
@@ -96,7 +91,7 @@ namespace API.Controllers
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
     }
 }
