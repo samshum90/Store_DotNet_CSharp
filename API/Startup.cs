@@ -32,7 +32,7 @@ namespace API
         {
             // services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("ProductsList"));
             services.AddDbContext<DataContext>(opts =>
-                opts.UseSqlite(Configuration.GetConnectionString("sqlConnection")));
+                opts.UseNpgsql(Configuration.GetConnectionString("sqlConnection")));
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddControllers();
             services.AddCors();
