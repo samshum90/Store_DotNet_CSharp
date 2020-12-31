@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  api:
+    container_name: "api"
+    image: "aspnetcoreapp"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "postgres"
+    networks:
+      - aspnetcoreapp-network
+
+  postgres:
+    container_name: "postgres"
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Pa1731w0rd
+    networks:
+      - aspnetcoreapp-network
+
+networks:
+  aspnetcoreapp-network:
+    driver: bridge
