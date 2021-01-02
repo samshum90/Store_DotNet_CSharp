@@ -4,8 +4,10 @@
 
 #### To build and run Containerize api
 
-`cd API`
-`docker-compose up --build`
+``` 
+cd API
+docker-compose up --build
+```
 
 #### Restful routes
 
@@ -22,11 +24,15 @@ Default base URL is http://localhost:5000
 #### To run individually
 
 Start the containerized Posetgres Database
-`docker run --name store -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=Pa1731w0rd -p 5432:5432 -d postgres:latest`
+```
+docker run --name store -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=Pa1731w0rd -p 5432:5432 -d postgres:latest
+```
 
 Start Store API
-`cd API`
-`dotnet run`
+```
+cd API
+dotnet run
+```
 
 ### Instructions
 
