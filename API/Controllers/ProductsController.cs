@@ -69,8 +69,10 @@ namespace API.Controllers
         }
 
         [HttpPost("product")]
-        public async Task<ActionResult<Product>> CreateProduct([FromForm] Product product)
+        public async Task<ActionResult<Product>> CreateProduct([FromForm] ProductDto productDto)
         {
+
+            var product = _mapper.Map<Product>(productDto);
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
